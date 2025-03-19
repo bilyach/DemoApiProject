@@ -37,30 +37,24 @@ jobs:
       # Step 4: Install dependencies using Maven
     - name: Install dependencies
       run: mvn install -DskipTests
-      # Step 5: Run Tests
     - name: Run Tests
       run: mvn clean test
       continue-on-error: true
-      
-    - name: Setup Allure History
-      uses: actions/checkout@v4.2.2
-      if: always()
-      continue-on-error: true
-      with:
-          ref: gh-pages
-          path: gh-pages
+        # Step 6: Install Allure command-line tool
+    - name: Run Allure
+      run: mvn allure:report
 
-    - name: Generate Allure Report
-      uses: simple-elf/allure-report-action@v1.11
-      if: always()
-      with:
-          allure_results: target/allure-results
-          allure_history: allure-history
 
-    - name: Publish Allure Report
-      if: always()
-      uses: peaceiris/actions-gh-pages@v4.0.0
+        # Step 7: Upload Allure Report
+    - name: Upload Allure Report
+      uses: actions/upload-artifact@v4
       with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
+        name: allure-report
+        path: target/allure-report
+
+    - name: Deploy Allure report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: target/allure-report
+        publish_branch: report
