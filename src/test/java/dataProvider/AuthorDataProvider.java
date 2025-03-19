@@ -7,8 +7,6 @@ import org.testng.annotations.DataProvider;
 import util.RandomUtil;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 import static util.RandomUtil.ZERO_VAL;
 
@@ -34,7 +32,7 @@ public class AuthorDataProvider {
         };
     }
 
-    @DataProvider(name = "authorPostProvider")
+    @DataProvider(name = "authorPostModel")
     public static Object[][] getAuthorPostProvider() {
         return new Object[][]{
                 {
@@ -49,7 +47,7 @@ public class AuthorDataProvider {
         };
     }
 
-    @DataProvider(name = "authorPostNegativeModelProvider")
+    @DataProvider(name = "negativeAuthorPostModel")
     public static Object[][] getAuthorPostNegativeModelProvider() {
         return new Object[][]{
                 {
@@ -70,7 +68,7 @@ public class AuthorDataProvider {
         };
     }
 
-    @DataProvider(name = "updateAuthorProvider")
+    @DataProvider(name = "authorPutModel")
     public static Object[][] getUpdateAuthorProvider() {
         var authorModels = new AuthorClient().getAuthorsAsModels();
         AuthorModel authorModel = RandomUtil.getRandomElement(Arrays.asList(authorModels));
@@ -82,7 +80,7 @@ public class AuthorDataProvider {
         };
     }
 
-    @DataProvider(name = "updateInvalidPutAuthorProvider")
+    @DataProvider(name = "negativePutAuthorModel")
     public static Object[][] getUpdateInvalidPutAuthorProviderProvider() {
         var authorModels = new AuthorClient().getAuthorsAsModels();
         AuthorModel authorModel = RandomUtil.getRandomElement(Arrays.asList(authorModels));

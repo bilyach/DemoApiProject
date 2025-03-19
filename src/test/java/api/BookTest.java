@@ -60,14 +60,14 @@ public class BookTest extends BaseApiTest {
         Assertions.assertThat(BookResponse.getId()).isEqualTo(BookModel.getId());
     }
 
-    @Test(dataProvider = "bookPostProvider", dataProviderClass = BookDataProvider.class)
+    @Test(dataProvider = "postBookModel", dataProviderClass = BookDataProvider.class)
     public void verifyPostBooksEndpoint(BookModel BookModel) {
         var createdBook = bookClient.postBooksAsModel(BookModel);
 
         Assertions.assertThat(createdBook.getId()).isEqualTo(BookModel.getId());
     }
 
-    @Test(dataProvider = "updateBookProvider", dataProviderClass = BookDataProvider.class)
+    @Test(dataProvider = "putBookModel", dataProviderClass = BookDataProvider.class)
     public void verifyPutBookByIdEndpoint(Integer id, BookModel BookModel) {
         var updatedBook = bookClient.putBooksByIdAsModel(id, BookModel);
 
@@ -97,7 +97,7 @@ public class BookTest extends BaseApiTest {
         Assertions.assertThat(BookResponse.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_NOT_FOUND);
     }
 
-    @Test(dataProvider = "bookPostNegativeModelProvider", dataProviderClass = BookDataProvider.class)
+    @Test(dataProvider = "negativePostBookModel", dataProviderClass = BookDataProvider.class)
     public void verifyPostBookEndpointNegative(BookModel BookModel) {
         var createdBook = bookClient.postBooks(BookModel)
                 .then().extract().response();
@@ -105,7 +105,7 @@ public class BookTest extends BaseApiTest {
         Assertions.assertThat(createdBook.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_REQUEST);
     }
 
-    @Test(dataProvider = "updateInvalidPutBookProvider", dataProviderClass = BookDataProvider.class)
+    @Test(dataProvider = "negativePutBookModel", dataProviderClass = BookDataProvider.class)
     public void verifyPutBookByIdEndpointNegative(Integer id, BookModel BookModel) {
         var updatedBook = bookClient.putBooksById(id, BookModel)
                 .then().extract().response();

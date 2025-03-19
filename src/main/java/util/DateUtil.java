@@ -11,7 +11,4 @@ public class DateUtil {
         return zonedDateTime.format(formatter);
     }
 
-    public static ZonedDateTime convertToDateTime(String date) {
-        return ZonedDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-    }
 }

@@ -1,9 +1,6 @@
 package dataProvider;
 
-import clients.AuthorClient;
 import clients.BookClient;
-import models.author.AuthorModel;
-import models.author.AuthorModelProvider;
 import models.book.BookModel;
 import models.book.BookModelProvider;
 import org.testng.annotations.DataProvider;
@@ -12,7 +9,6 @@ import util.RandomUtil;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static dataProvider.DataProviderHelper.getBookRandomId;
 import static util.RandomUtil.ZERO_VAL;
 
 public class BookDataProvider {
@@ -32,7 +28,7 @@ public class BookDataProvider {
     public static Object[][] getValidAuthorModelProvider() {
         return new Object[][]{
                 {
-                        BookModelProvider.getValidBookModel(getBookRandomId())
+                        BookModelProvider.getValidBookModel()
                 },
         };
     }
@@ -47,7 +43,7 @@ public class BookDataProvider {
         };
     }
 
-    @DataProvider(name = "bookPostProvider")
+    @DataProvider(name = "postBookModel")
     public static Object[][] getCreateBookProvider() {
         var count = Objects.requireNonNull(new BookClient().getBooksAsModels()).length;
         return new Object[][]{
@@ -66,7 +62,7 @@ public class BookDataProvider {
         };
     }
 
-    @DataProvider(name = "bookPostNegativeModelProvider")
+    @DataProvider(name = "negativePostBookModel")
     public static Object[][] getNewBookProvider() {
         return new Object[][]{
                 {
@@ -75,33 +71,28 @@ public class BookDataProvider {
         };
     }
 
-    @DataProvider(name = "updateBookProvider")
+    @DataProvider(name = "putBookModel")
     public static Object[][] getUpdateBookProvider() {
-        var id = getBookRandomId();
+        var bookModels = new BookClient().getBooksAsModels();
+        BookModel bookModel = RandomUtil.getRandomElement(Arrays.asList(bookModels));
         return new Object[][]{
                 {
-                        id,
-                        BookModelProvider.getValidBookModel(id)
+                        bookModel.getId(),
+                        BookModelProvider.getValidBookModel()
                 },
         };
     }
 
-    @DataProvider(name = "updateInvalidPutBookProvider")
+    @DataProvider(name = "negativePutBookModel")
     public static Object[][] getUpdateBookInvalidDataProvider() {
+        var bookModels = new BookClient().getBooksAsModels();
+        BookModel bookModel = RandomUtil.getRandomElement(Arrays.asList(bookModels));
         return new Object[][]{
                 {
-                        getBookRandomId(),
+                        bookModel.getId(),
                         BookModelProvider.getInvalidBookModel()
                 },
         };
     }
 
-    @DataProvider(name = "datePatternProvider")
-    public static Object[][] getDatePatternProvider() {
-        return new Object[][]{
-                {
-                        getBookRandomId()
-                },
-        };
-    }
 }

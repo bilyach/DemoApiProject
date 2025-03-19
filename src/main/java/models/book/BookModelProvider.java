@@ -9,6 +9,10 @@ import static util.RandomUtil.MIN_STRING_LENGTH;
 
 public class BookModelProvider {
 
+    public static BookModel getValidBookModel() {
+        return getValidBookModel(RandomUtil.getRandomNumber(MIN_STRING_LENGTH));
+    }
+
     public static BookModel getValidBookModel(Integer id) {
         return BookModel.builder()
                 .id(id)
@@ -17,13 +21,6 @@ public class BookModelProvider {
                 .description(RandomUtil.getRandomString(MIN_STRING_LENGTH))
                 .pageCount(id)
                 .publishDate(convertDateToString(ZonedDateTime.now()))
-                .build();
-    }
-
-    public static BookModel getInvalidBookModel() {
-        return BookModel.builder()
-                .id(Integer.MIN_VALUE)
-                .pageCount(Integer.MIN_VALUE)
                 .build();
     }
 
@@ -44,4 +41,12 @@ public class BookModelProvider {
         validBookModel.setPublishDate(null);
         return validBookModel;
     }
+
+    public static BookModel getInvalidBookModel() {
+        return BookModel.builder()
+                .id(Integer.MIN_VALUE)
+                .pageCount(Integer.MIN_VALUE)
+                .build();
+    }
+
 }

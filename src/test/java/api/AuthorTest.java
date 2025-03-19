@@ -60,14 +60,14 @@ public class AuthorTest extends BaseApiTest {
         Assertions.assertThat(authorResponse.getId()).isEqualTo(authorModel.getId());
     }
 
-    @Test(dataProvider = "authorPostProvider", dataProviderClass = AuthorDataProvider.class)
+    @Test(dataProvider = "authorPostModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPostAuthorsEndpoint(AuthorModel authorModel) {
         var createdAuthor = authorClient.postAuthorsAsModel(authorModel);
 
         Assertions.assertThat(createdAuthor.getId()).isEqualTo(authorModel.getId());
     }
 
-    @Test(dataProvider = "updateAuthorProvider", dataProviderClass = AuthorDataProvider.class)
+    @Test(dataProvider = "authorPutModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPutAuthorByIdEndpoint(Integer id, AuthorModel authorModel) {
         var updatedAuthor = authorClient.putAuthorsByIdAsModel(id, authorModel);
 
@@ -97,7 +97,7 @@ public class AuthorTest extends BaseApiTest {
         Assertions.assertThat(authorResponse.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_NOT_FOUND);
     }
 
-    @Test(dataProvider = "authorPostNegativeModelProvider", dataProviderClass = AuthorDataProvider.class)
+    @Test(dataProvider = "negativeAuthorPostModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPostAuthorEndpointNegative(AuthorModel authorModel) {
         var createdAuthor = authorClient.postAuthors(authorModel)
                 .then().extract().response();
@@ -105,7 +105,7 @@ public class AuthorTest extends BaseApiTest {
         Assertions.assertThat(createdAuthor.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_REQUEST);
     }
 
-    @Test(dataProvider = "updateInvalidPutAuthorProvider", dataProviderClass = AuthorDataProvider.class)
+    @Test(dataProvider = "negativePutAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPutAuthorByIdEndpointNegative(Integer id, AuthorModel authorModel) {
         var updatedAuthor = authorClient.putAuthorsById(id, authorModel)
                 .then().extract().response();
