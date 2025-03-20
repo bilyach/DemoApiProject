@@ -6,7 +6,7 @@ import models.author.AuthorModel;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;
 
-import java.net.HttpURLConnection;
+import static java.net.HttpURLConnection.*;
 
 public class AuthorTest extends BaseApiTest {
 
@@ -22,12 +22,12 @@ public class AuthorTest extends BaseApiTest {
         verifySchema(client.getResponse(authorModel.getId()), "getAuthorById");
     }
 
-    @Test(dataProvider = "validAuthorModel", dataProviderClass = AuthorDataProvider.class)
+    @Test(dataProvider = "getValidAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPostAuthorResponseSchema(AuthorModel authorModel) {
         verifySchema(client.postResponse(authorModel), "postAuthors");
     }
 
-    @Test(dataProvider = "validAuthorModel", dataProviderClass = AuthorDataProvider.class)
+    @Test(dataProvider = "getValidAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPutAuthorResponseSchema(AuthorModel authorModel) {
         verifySchema(client.putResponse(authorModel.getId(), authorModel), "putAuthors");
     }
@@ -47,8 +47,8 @@ public class AuthorTest extends BaseApiTest {
     }
 
     @Test(dataProvider = "authorPutModel", dataProviderClass = AuthorDataProvider.class)
-    public void verifyPutAuthorByIdEndpoint(Integer id, AuthorModel authorModel) {
-        var updatedAuthor = client.put(id, authorModel);
+    public void verifyPutAuthorByIdEndpoint(AuthorModel authorModel) {
+        var updatedAuthor = client.put(authorModel.getId(), authorModel);
 
         Assertions.assertThat(updatedAuthor.getId()).isEqualTo(authorModel.getId());
     }
@@ -58,34 +58,33 @@ public class AuthorTest extends BaseApiTest {
         var createdAuthor = client.post(authorModel);
         var response = client.deleteResponse(createdAuthor.getId());
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_OK);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HTTP_OK);
 
         var deletedAuthor = client.getResponse(createdAuthor.getId());
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HTTP_NOT_FOUND);
         Assertions.assertThat(deletedAuthor.getBody().asString().isEmpty()).isTrue();
     }
 
-
-    @Test(dataProvider = "negativeAuthorIdProvider", dataProviderClass = AuthorDataProvider.class)
+    @Test(dataProvider = "negativeGetAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyGetAuthorByIdEndpointNegative(Integer id) {
         var authorResponse = client.getResponse(id);
 
-        Assertions.assertThat(authorResponse.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_NOT_FOUND);
+        Assertions.assertThat(authorResponse.getStatusCode()).isEqualTo(HTTP_NOT_FOUND);
     }
 
-    @Test(dataProvider = "negativeAuthorPostModel", dataProviderClass = AuthorDataProvider.class)
+    @Test(dataProvider = "negativePostAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPostAuthorEndpointNegative(AuthorModel authorModel) {
         var createdAuthor = client.postResponse(authorModel);
 
-        Assertions.assertThat(createdAuthor.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_REQUEST);
+        Assertions.assertThat(createdAuthor.getStatusCode()).isEqualTo(HTTP_BAD_REQUEST);
     }
 
     @Test(dataProvider = "negativePutAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPutAuthorByIdEndpointNegative(Integer id, AuthorModel authorModel) {
         var updatedAuthor = client.putResponse(id, authorModel);
 
-        Assertions.assertThat(updatedAuthor.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_REQUEST);
+        Assertions.assertThat(updatedAuthor.getStatusCode()).isEqualTo(HTTP_BAD_REQUEST);
     }
 
 }

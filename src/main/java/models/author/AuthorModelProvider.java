@@ -1,17 +1,16 @@
 package models.author;
 
-import util.RandomUtil;
-
-import static util.RandomUtil.MIN_STRING_LENGTH;
+import static util.RandomUtil.getRandomNumber;
+import static util.RandomUtil.getRandomString;
 
 public class AuthorModelProvider {
 
     public static AuthorModel getValidAuthorModel() {
         return AuthorModel.builder()
-                .id(RandomUtil.getRandomNumber(MIN_STRING_LENGTH))
-                .idBook(RandomUtil.getRandomNumber(MIN_STRING_LENGTH))
-                .firstName(RandomUtil.getRandomString(MIN_STRING_LENGTH))
-                .lastName(RandomUtil.getRandomString(MIN_STRING_LENGTH))
+                .id(getRandomNumber())
+                .idBook(getRandomNumber())
+                .firstName(getRandomString())
+                .lastName(getRandomString())
                 .build();
     }
 
@@ -28,16 +27,21 @@ public class AuthorModelProvider {
         return validAuthorModelModel;
     }
 
-    public static AuthorModel getAuthorModelWithoutBookId() {
-        AuthorModel validAuthorModelModel = getValidAuthorModel();
-        validAuthorModelModel.setIdBook(null);
-        return validAuthorModelModel;
+    public static AuthorModel getAuthorModelWithOnlyId() {
+        return AuthorModel.builder().id(getRandomNumber()).build();
     }
 
-    public static AuthorModel getAuthorModelWithRequiredFields() {
-        AuthorModel validAuthorModelModel = getValidAuthorModel();
-        validAuthorModelModel.setFirstName(null);
-        validAuthorModelModel.setLastName(null);
-        return validAuthorModelModel;
+    public static AuthorModel getAuthorModelWithOnlyBookId() {
+        return AuthorModel.builder().idBook(getRandomNumber()).build();
+    }
+
+    public static AuthorModel getAuthorModelWithOnlyRequiredFields() {
+        return AuthorModel.builder()
+                .idBook(getRandomNumber())
+                .id(getRandomNumber()).build();
+    }
+
+    public static AuthorModel getAuthorEmptyModel() {
+        return AuthorModel.builder().build();
     }
 }

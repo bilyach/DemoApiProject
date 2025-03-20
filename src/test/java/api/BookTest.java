@@ -8,6 +8,9 @@ import org.testng.annotations.Test;
 
 import java.net.HttpURLConnection;
 
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_OK;
+
 public class BookTest extends BaseApiTest {
 
     private BookClient client = new BookClient();
@@ -22,12 +25,12 @@ public class BookTest extends BaseApiTest {
         verifySchema(client.getResponse(bookModel.getId()), "getBookById");
     }
 
-    @Test(dataProvider = "validBookModel", dataProviderClass = BookDataProvider.class)
+    @Test(dataProvider = "getValidBookModel", dataProviderClass = BookDataProvider.class)
     public void verifyPostBookResponseSchema(BookModel bookModel) {
         verifySchema(client.postResponse(bookModel), "postBooks");
     }
 
-    @Test(dataProvider = "validBookModel", dataProviderClass = BookDataProvider.class)
+    @Test(dataProvider = "getValidBookModel", dataProviderClass = BookDataProvider.class)
     public void verifyPutBookResponseSchema(BookModel bookModel) {
         verifySchema(client.putResponse(bookModel.getId(), bookModel), "putBooks");
     }
@@ -39,16 +42,16 @@ public class BookTest extends BaseApiTest {
         Assertions.assertThat(bookResponse.getId()).isEqualTo(bookModel.getId());
     }
 
-    @Test(dataProvider = "postBookModel", dataProviderClass = BookDataProvider.class)
+    @Test(dataProvider = "bookPostModel", dataProviderClass = BookDataProvider.class)
     public void verifyPostBooksEndpoint(BookModel bookModel) {
         var createdBook = client.post(bookModel);
 
         Assertions.assertThat(createdBook.getId()).isEqualTo(bookModel.getId());
     }
 
-    @Test(dataProvider = "putBookModel", dataProviderClass = BookDataProvider.class)
-    public void verifyPutBookByIdEndpoint(Integer id, BookModel bookModel) {
-        var updatedBook = client.put(id, bookModel);
+    @Test(dataProvider = "bookPutModel", dataProviderClass = BookDataProvider.class)
+    public void verifyPutBookByIdEndpoint(BookModel bookModel) {
+        var updatedBook = client.put(bookModel.getId(), bookModel);
 
         Assertions.assertThat(updatedBook.getId()).isEqualTo(bookModel.getId());
     }
@@ -58,20 +61,19 @@ public class BookTest extends BaseApiTest {
         var createdBook = client.post(bookModel);
         var response = client.deleteResponse(createdBook.getId());
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_OK);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HTTP_OK);
 
         var deletedBook = client.getResponse(createdBook.getId());
 
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HTTP_NOT_FOUND);
         Assertions.assertThat(deletedBook.getBody().asString().isEmpty()).isTrue();
     }
-
 
     @Test(dataProvider = "negativeBookIdProvider", dataProviderClass = BookDataProvider.class)
     public void verifyGetBookByIdEndpointNegative(Integer id) {
         var bookResponse = client.getResponse(id);
 
-        Assertions.assertThat(bookResponse.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_NOT_FOUND);
+        Assertions.assertThat(bookResponse.getStatusCode()).isEqualTo(HTTP_NOT_FOUND);
     }
 
     @Test(dataProvider = "negativePostBookModel", dataProviderClass = BookDataProvider.class)

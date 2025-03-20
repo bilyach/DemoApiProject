@@ -1,97 +1,90 @@
 package dataProvider;
 
-import clients.AuthorClient;
 import clients.BookClient;
-import models.book.BookModel;
-import models.book.BookModelProvider;
 import org.testng.annotations.DataProvider;
-import util.RandomUtil;
 
-import java.util.Arrays;
-import java.util.Objects;
-
-import static util.RandomUtil.ZERO_VAL;
+import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Integer.MIN_VALUE;
+import static models.book.BookModelProvider.*;
+import static util.RandomUtil.getRandomElement;
 
 public class BookDataProvider {
 
     private static BookClient client = new BookClient();
 
     @DataProvider(name = "getRandomBookModel")
-    public static Object[][] getRandomBookModelProvider() {
-        BookModel bookModel = RandomUtil.getRandomElement(client.getModels());
+    public static Object[][] getRandomBookModel() {
         return new Object[][]{
                 {
-                        bookModel
-                },
+                        getRandomElement(client.getModels())
+                }
         };
     }
 
-    @DataProvider(name = "validBookModel")
-    public static Object[][] getValidAuthorModelProvider() {
+    @DataProvider(name = "getValidBookModel")
+    public static Object[][] getValidBookModelProvider() {
         return new Object[][]{
                 {
-                        BookModelProvider.getValidBookModel()
-                },
+                        getValidBookModel()
+                }
         };
     }
 
-    @DataProvider(name = "negativeBookIdProvider")
-    public static Object[][] getNegativeBookIdProvider() {
-
+    @DataProvider(name = "bookPostModel")
+    public static Object[][] bookPostModel() {
         return new Object[][]{
-                {ZERO_VAL},
-                {Integer.MIN_VALUE},
-                {Integer.MAX_VALUE},
+                {
+                        getValidBookModel()
+                },
+                {
+                        getBookModelWithOnlyRequiredFields()
+                }
         };
     }
 
-    @DataProvider(name = "postBookModel")
-    public static Object[][] getCreateBookProvider() {
-        var count = Objects.requireNonNull(client.getModels()).size();
+    @DataProvider(name = "bookPutModel")
+    public static Object[][] bookPutModel() {
         return new Object[][]{
                 {
-                        BookModelProvider.getValidBookModel(count++)
-                },
-                {
-                        BookModelProvider.getBookModelWithoutTitle(count++)
-                },
-                {
-                        BookModelProvider.getBookModelWithoutPageCount(count++)
-                },
-                {
-                        BookModelProvider.getBookModelWithoutDate(++count)
-                },
+                        getValidBookModel()
+                }
+        };
+    }
+
+    @DataProvider(name = "negativeGetBookProvider")
+    public static Object[][] negativeGetBookProvider() {
+        return new Object[][]{
+                {0},
+                {MIN_VALUE},
+                {MAX_VALUE}
         };
     }
 
     @DataProvider(name = "negativePostBookModel")
-    public static Object[][] getNewBookProvider() {
+    public static Object[][] negativePostBookModel() {
         return new Object[][]{
                 {
-                        BookModelProvider.getInvalidBookModel()
+                        getInvalidBookModel()
                 },
+                {
+                        getEmptyBookModel()
+                }
         };
     }
 
-    @DataProvider(name = "putBookModel")
-    public static Object[][] getUpdateBookProvider() {
-        BookModel bookModel = RandomUtil.getRandomElement(client.getModels());
-        return new Object[][]{
-                {
-                        bookModel.getId(),
-                        BookModelProvider.getValidBookModel()
-                },
-        };
-    }
 
     @DataProvider(name = "negativePutBookModel")
-    public static Object[][] getUpdateBookInvalidDataProvider() {
-        BookModel bookModel = RandomUtil.getRandomElement(client.getModels());
+    public static Object[][] negativePutBookModel() {
+        var id = getRandomElement(client.getModels()).getId();
         return new Object[][]{
                 {
-                        bookModel.getId(),
-                        BookModelProvider.getInvalidBookModel()
+                        id,
+                        getInvalidBookModel()
                 },
+                {
+                        id,
+                        getEmptyBookModel()
+                }
         };
     }
 
