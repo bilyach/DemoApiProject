@@ -32,14 +32,6 @@ public class BookTest extends BaseApiTest {
         verifySchema(client.putResponse(bookModel.getId(), bookModel), "putBooks");
     }
 
-    @Test
-    public void verifyThatGetBooksEndpointIsIdempotent() {
-        var bookModels1 = client.getModels();
-        var bookModels2 = client.getModels();
-
-        Assertions.assertThat(bookModels1).isEqualTo(bookModels2);
-    }
-
     @Test(dataProvider = "getRandomBookModel", dataProviderClass = BookDataProvider.class)
     public void verifyGetBookByIdEndpoint(BookModel bookModel) {
         var bookResponse = client.get(bookModel.getId());

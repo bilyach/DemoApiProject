@@ -22,13 +22,13 @@ public abstract class BaseClient<T> {
         this.endpoint = endpoint;
     }
 
-    RequestSpecification buildSpec() {
+    RequestSpecification giverWithSpec() {
         RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
         requestSpecBuilder
                 .setBaseUri(ConfigurationManager.getConfiguration().getBaseUrl())
                 .setContentType(ContentType.JSON)
                 .setAccept(ContentType.JSON);
-        return requestSpecBuilder.build().filter(new AllureRestAssured());
+        return given().spec(requestSpecBuilder.build().filter(new AllureRestAssured()));
     }
 
     public T get() {
@@ -56,18 +56,11 @@ public abstract class BaseClient<T> {
     }
 
     public Response getResponse() {
-        return given()
-                .spec(buildSpec())
-                .when()
-                .get(endpoint)
-                .then()
-                .extract()
-                .response();
+        return getResponse(endpoint);
     }
 
     Response getResponse(String endpoint) {
-        return given()
-                .spec(buildSpec())
+        return giverWithSpec()
                 .when()
                 .get(endpoint)
                 .then()
@@ -76,8 +69,7 @@ public abstract class BaseClient<T> {
     }
 
     public Response postResponse(Object body) {
-        return given()
-                .spec(buildSpec())
+        return giverWithSpec()
                 .and()
                 .body(body)
                 .when()
@@ -88,20 +80,11 @@ public abstract class BaseClient<T> {
     }
 
     public Response putResponse(Object body) {
-        return given()
-                .spec(buildSpec())
-                .and()
-                .body(body)
-                .when()
-                .put(endpoint)
-                .then()
-                .extract()
-                .response();
+        return putResponse(endpoint, body);
     }
 
     public Response putResponse(String endpoint, Object body) {
-        return given()
-                .spec(buildSpec())
+        return giverWithSpec()
                 .and()
                 .body(body)
                 .when()
@@ -112,8 +95,7 @@ public abstract class BaseClient<T> {
     }
 
     public Response deleteResponse(Integer id) {
-        return given()
-                .spec(buildSpec())
+        return giverWithSpec()
                 .when()
                 .delete(endpoint + id)
                 .then()

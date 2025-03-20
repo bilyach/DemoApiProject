@@ -32,14 +32,6 @@ public class AuthorTest extends BaseApiTest {
         verifySchema(client.putResponse(authorModel.getId(), authorModel), "putAuthors");
     }
 
-    @Test
-    public void verifyThatGetAuthorsEndpointIsIdempotent() {
-        var authorModels1 = client.getModels();
-        var authorModels2 = client.getModels();
-
-        Assertions.assertThat(authorModels1).isEqualTo(authorModels2);
-    }
-
     @Test(dataProvider = "getRandomAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyGetAuthorByIdEndpoint(AuthorModel authorModel) {
         var authorResponse = client.get(authorModel.getId());

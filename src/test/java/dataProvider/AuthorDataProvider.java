@@ -6,8 +6,6 @@ import models.author.AuthorModelProvider;
 import org.testng.annotations.DataProvider;
 import util.RandomUtil;
 
-import java.util.Arrays;
-
 import static util.RandomUtil.ZERO_VAL;
 
 public class AuthorDataProvider {
