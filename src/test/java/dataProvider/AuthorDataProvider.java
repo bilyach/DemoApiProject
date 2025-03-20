@@ -16,7 +16,7 @@ public class AuthorDataProvider {
 
     @DataProvider(name = "getRandomAuthorModel")
     public static Object[][] getRandomAuthorModelProvider() {
-        var authorModels = client.get();
+        var authorModels = client.getModels();
         AuthorModel authorModel = RandomUtil.getRandomElement(authorModels);
         return new Object[][]{
                 {
@@ -72,7 +72,7 @@ public class AuthorDataProvider {
 
     @DataProvider(name = "authorPutModel")
     public static Object[][] getUpdateAuthorProvider() {
-        var authorModels = client.get();
+        var authorModels = client.getModels();
         AuthorModel authorModel = RandomUtil.getRandomElement((authorModels));
         return new Object[][]{
                 {
@@ -84,7 +84,7 @@ public class AuthorDataProvider {
 
     @DataProvider(name = "negativePutAuthorModel")
     public static Object[][] getUpdateInvalidPutAuthorProviderProvider() {
-        var authorModels = client.get();
+        var authorModels = client.getModels();
         AuthorModel authorModel = RandomUtil.getRandomElement(authorModels);
         return new Object[][]{
                 {

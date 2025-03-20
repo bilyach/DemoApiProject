@@ -18,7 +18,7 @@ public class BookDataProvider {
 
     @DataProvider(name = "getRandomBookModel")
     public static Object[][] getRandomBookModelProvider() {
-        BookModel bookModel = RandomUtil.getRandomElement(client.get());
+        BookModel bookModel = RandomUtil.getRandomElement(client.getModels());
         return new Object[][]{
                 {
                         bookModel
@@ -47,7 +47,7 @@ public class BookDataProvider {
 
     @DataProvider(name = "postBookModel")
     public static Object[][] getCreateBookProvider() {
-        var count = Objects.requireNonNull(client.get()).size();
+        var count = Objects.requireNonNull(client.getModels()).size();
         return new Object[][]{
                 {
                         BookModelProvider.getValidBookModel(count++)
@@ -75,7 +75,7 @@ public class BookDataProvider {
 
     @DataProvider(name = "putBookModel")
     public static Object[][] getUpdateBookProvider() {
-        BookModel bookModel = RandomUtil.getRandomElement(client.get());
+        BookModel bookModel = RandomUtil.getRandomElement(client.getModels());
         return new Object[][]{
                 {
                         bookModel.getId(),
@@ -86,7 +86,7 @@ public class BookDataProvider {
 
     @DataProvider(name = "negativePutBookModel")
     public static Object[][] getUpdateBookInvalidDataProvider() {
-        BookModel bookModel = RandomUtil.getRandomElement(client.get());
+        BookModel bookModel = RandomUtil.getRandomElement(client.getModels());
         return new Object[][]{
                 {
                         bookModel.getId(),

@@ -34,8 +34,8 @@ public class AuthorTest extends BaseApiTest {
 
     @Test
     public void verifyThatGetAuthorsEndpointIsIdempotent() {
-        var authorModels1 = client.get();
-        var authorModels2 = client.get();
+        var authorModels1 = client.getModels();
+        var authorModels2 = client.getModels();
 
         Assertions.assertThat(authorModels1).isEqualTo(authorModels2);
     }

@@ -2,7 +2,6 @@ package api;
 
 import clients.BookClient;
 import dataProvider.BookDataProvider;
-import io.restassured.module.jsv.JsonSchemaValidator;
 import models.book.BookModel;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;
@@ -35,8 +34,8 @@ public class BookTest extends BaseApiTest {
 
     @Test
     public void verifyThatGetBooksEndpointIsIdempotent() {
-        var bookModels1 = client.get();
-        var bookModels2 = client.get();
+        var bookModels1 = client.getModels();
+        var bookModels2 = client.getModels();
 
         Assertions.assertThat(bookModels1).isEqualTo(bookModels2);
     }
