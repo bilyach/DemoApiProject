@@ -2,7 +2,6 @@ package api;
 
 import clients.AuthorClient;
 import dataProvider.AuthorDataProvider;
-import io.restassured.module.jsv.JsonSchemaValidator;
 import models.author.AuthorModel;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;
@@ -11,78 +10,65 @@ import java.net.HttpURLConnection;
 
 public class AuthorTest extends BaseApiTest {
 
-    private AuthorClient authorClient = new AuthorClient();
+    public AuthorClient client = new AuthorClient();
 
     @Test
     public void verifyGetAuthorsResponseSchema() {
-        authorClient.getAuthors()
-                .then()
-                .assertThat()
-                .body(JsonSchemaValidator.matchesJsonSchema(schema("getAuthors")));
+        verifySchema(client.getResponse(), "getAuthors");
     }
 
     @Test(dataProvider = "getRandomAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyGetAuthorResponseSchema(AuthorModel authorModel) {
-        authorClient.getAuthorById(authorModel.getId())
-                .then()
-                .assertThat()
-                .body(JsonSchemaValidator.matchesJsonSchema(schema("getAuthorById")));
+        verifySchema(client.getResponse(authorModel.getId()), "getAuthorById");
     }
 
     @Test(dataProvider = "validAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPostAuthorResponseSchema(AuthorModel authorModel) {
-        authorClient.postAuthors(authorModel)
-                .then()
-                .assertThat()
-                .body(JsonSchemaValidator.matchesJsonSchema(schema("postAuthors")));
+        verifySchema(client.postResponse(authorModel), "postAuthors");
     }
 
     @Test(dataProvider = "validAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPutAuthorResponseSchema(AuthorModel authorModel) {
-        authorClient.putAuthorsById(authorModel.getId(), authorModel)
-                .then()
-                .assertThat()
-                .body(JsonSchemaValidator.matchesJsonSchema(schema("putAuthors")));
+        verifySchema(client.putResponse(authorModel.getId(), authorModel), "putAuthors");
     }
 
     @Test
     public void verifyThatGetAuthorsEndpointIsIdempotent() {
-        var authorModels1 = authorClient.getAuthorsAsModels();
-        var authorModels2 = authorClient.getAuthorsAsModels();
+        var authorModels1 = client.get();
+        var authorModels2 = client.get();
 
         Assertions.assertThat(authorModels1).isEqualTo(authorModels2);
     }
 
     @Test(dataProvider = "getRandomAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyGetAuthorByIdEndpoint(AuthorModel authorModel) {
-        var authorResponse = authorClient.getAuthorByIdAsModel(authorModel.getId());
+        var authorResponse = client.get(authorModel.getId());
 
         Assertions.assertThat(authorResponse.getId()).isEqualTo(authorModel.getId());
     }
 
     @Test(dataProvider = "authorPostModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPostAuthorsEndpoint(AuthorModel authorModel) {
-        var createdAuthor = authorClient.postAuthorsAsModel(authorModel);
+        var createdAuthor = client.post(authorModel);
 
         Assertions.assertThat(createdAuthor.getId()).isEqualTo(authorModel.getId());
     }
 
     @Test(dataProvider = "authorPutModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPutAuthorByIdEndpoint(Integer id, AuthorModel authorModel) {
-        var updatedAuthor = authorClient.putAuthorsByIdAsModel(id, authorModel);
+        var updatedAuthor = client.put(id, authorModel);
 
         Assertions.assertThat(updatedAuthor.getId()).isEqualTo(authorModel.getId());
     }
 
     @Test(dataProvider = "getRandomAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyDeleteAuthorByIdEndpoint(AuthorModel authorModel) {
-        var createdAuthor = authorClient.postAuthorsAsModel(authorModel);
-        var response = authorClient.deleteAuthorById(createdAuthor.getId());
+        var createdAuthor = client.post(authorModel);
+        var response = client.deleteResponse(createdAuthor.getId());
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_OK);
 
-        var deletedAuthor = authorClient.getAuthorById(createdAuthor.getId())
-                .then().extract().response();
+        var deletedAuthor = client.getResponse(createdAuthor.getId());
 
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_NOT_FOUND);
         Assertions.assertThat(deletedAuthor.getBody().asString().isEmpty()).isTrue();
@@ -91,24 +77,21 @@ public class AuthorTest extends BaseApiTest {
 
     @Test(dataProvider = "negativeAuthorIdProvider", dataProviderClass = AuthorDataProvider.class)
     public void verifyGetAuthorByIdEndpointNegative(Integer id) {
-        var authorResponse = authorClient.getAuthorById(id)
-                .then().extract().response();
+        var authorResponse = client.getResponse(id);
 
         Assertions.assertThat(authorResponse.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_NOT_FOUND);
     }
 
     @Test(dataProvider = "negativeAuthorPostModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPostAuthorEndpointNegative(AuthorModel authorModel) {
-        var createdAuthor = authorClient.postAuthors(authorModel)
-                .then().extract().response();
+        var createdAuthor = client.postResponse(authorModel);
 
         Assertions.assertThat(createdAuthor.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_REQUEST);
     }
 
     @Test(dataProvider = "negativePutAuthorModel", dataProviderClass = AuthorDataProvider.class)
     public void verifyPutAuthorByIdEndpointNegative(Integer id, AuthorModel authorModel) {
-        var updatedAuthor = authorClient.putAuthorsById(id, authorModel)
-                .then().extract().response();
+        var updatedAuthor = client.putResponse(id, authorModel);
 
         Assertions.assertThat(updatedAuthor.getStatusCode()).isEqualTo(HttpURLConnection.HTTP_BAD_REQUEST);
     }

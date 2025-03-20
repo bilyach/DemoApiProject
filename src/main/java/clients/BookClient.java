@@ -1,72 +1,56 @@
 package clients;
 
 import io.restassured.response.Response;
+import models.author.AuthorModel;
 import models.book.BookModel;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class BookClient extends BaseClient {
+public class BookClient extends BaseClient<BookModel> {
 
-    public Response getBooks() {
-        return given()
-                .spec(buildSpec())
-                .get("/api/v1/books");
+    private static final String BOOKS_ENDPOINT = "/api/v1/books/";
+
+    public Response getResponse() {
+        return getResponse(BOOKS_ENDPOINT);
     }
 
-    public Response getBookById(Integer id) {
-        return given()
-                .spec(buildSpec())
-                .get("/api/v1/books/" + id);
+    public Response getResponse(Integer id) {
+        return getResponse(BOOKS_ENDPOINT + id);
     }
 
-    public Response postBooks(BookModel body) {
-        return given()
-                .spec(buildSpec())
-                .and()
-                .body(body)
-                .when()
-                .post("/api/v1/books");
+    public Response postResponse(BookModel body) {
+        return postResponse(BOOKS_ENDPOINT, body);
     }
 
-    public Response putBooksById(Integer id, BookModel body) {
-        return given()
-                .spec(buildSpec())
-                .and()
-                .body(body)
-                .when()
-                .put("/api/v1/books/" + id);
+    public Response putResponse(Integer id, BookModel body) {
+        return putResponse(BOOKS_ENDPOINT + id, body);
     }
 
-    public Response deleteBookById(Integer id) {
-        return given()
-                .spec(buildSpec())
-                .when()
-                .delete("/api/v1/books/" + id);
+    public Response deleteResponse(Integer id) {
+        return deleteResponse(BOOKS_ENDPOINT + id);
     }
 
-    public BookModel[] getBooksAsModels() {
-        return getBooks()
-                .then()
-                .extract().response().as(BookModel[].class);
+    public List<BookModel> get() {
+        return Arrays.asList(getResponse().as(BookModel[].class));
     }
 
-    public BookModel getBookByIdAsModel(Integer id) {
-        return getBookById(id)
-                .then()
-                .extract().response().as(BookModel.class);
+    public BookModel get(Integer id) {
+        return get(BOOKS_ENDPOINT + id, BookModel.class);
     }
 
-    public BookModel postBooksAsModel(BookModel body) {
-        return postBooks(body)
-                .then()
-                .extract().response().as(BookModel.class);
+    public BookModel post(BookModel body) {
+        return post(BOOKS_ENDPOINT, body, BookModel.class);
     }
 
-    public BookModel putBooksByIdAsModel(Integer id, BookModel body) {
-        return putBooksById(id, body)
-                .then()
-                .extract().response().as(BookModel.class);
+    public BookModel put(Integer id, BookModel body) {
+        return put(BOOKS_ENDPOINT + id, body, BookModel.class);
     }
 
+    public BookModel delete(Integer id) {
+        return delete(BOOKS_ENDPOINT + id, BookModel.class);
+    }
 
 }

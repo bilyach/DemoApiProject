@@ -12,10 +12,12 @@ import static util.RandomUtil.ZERO_VAL;
 
 public class AuthorDataProvider {
 
+    private static AuthorClient client = new AuthorClient();
+
     @DataProvider(name = "getRandomAuthorModel")
     public static Object[][] getRandomAuthorModelProvider() {
-        var authorModels = new AuthorClient().getAuthorsAsModels();
-        AuthorModel authorModel = RandomUtil.getRandomElement(Arrays.asList(authorModels));
+        var authorModels = client.get();
+        AuthorModel authorModel = RandomUtil.getRandomElement(authorModels);
         return new Object[][]{
                 {
                         authorModel
@@ -70,8 +72,8 @@ public class AuthorDataProvider {
 
     @DataProvider(name = "authorPutModel")
     public static Object[][] getUpdateAuthorProvider() {
-        var authorModels = new AuthorClient().getAuthorsAsModels();
-        AuthorModel authorModel = RandomUtil.getRandomElement(Arrays.asList(authorModels));
+        var authorModels = client.get();
+        AuthorModel authorModel = RandomUtil.getRandomElement((authorModels));
         return new Object[][]{
                 {
                         authorModel.getId(),
@@ -82,8 +84,8 @@ public class AuthorDataProvider {
 
     @DataProvider(name = "negativePutAuthorModel")
     public static Object[][] getUpdateInvalidPutAuthorProviderProvider() {
-        var authorModels = new AuthorClient().getAuthorsAsModels();
-        AuthorModel authorModel = RandomUtil.getRandomElement(Arrays.asList(authorModels));
+        var authorModels = client.get();
+        AuthorModel authorModel = RandomUtil.getRandomElement(authorModels);
         return new Object[][]{
                 {
                         authorModel.getId(),

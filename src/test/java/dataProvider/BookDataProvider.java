@@ -1,5 +1,6 @@
 package dataProvider;
 
+import clients.AuthorClient;
 import clients.BookClient;
 import models.book.BookModel;
 import models.book.BookModelProvider;
@@ -13,10 +14,11 @@ import static util.RandomUtil.ZERO_VAL;
 
 public class BookDataProvider {
 
+    private static BookClient client = new BookClient();
+
     @DataProvider(name = "getRandomBookModel")
     public static Object[][] getRandomBookModelProvider() {
-        var bookModels = new BookClient().getBooksAsModels();
-        BookModel bookModel = RandomUtil.getRandomElement(Arrays.asList(bookModels));
+        BookModel bookModel = RandomUtil.getRandomElement(client.get());
         return new Object[][]{
                 {
                         bookModel
@@ -45,7 +47,7 @@ public class BookDataProvider {
 
     @DataProvider(name = "postBookModel")
     public static Object[][] getCreateBookProvider() {
-        var count = Objects.requireNonNull(new BookClient().getBooksAsModels()).length;
+        var count = Objects.requireNonNull(client.get()).size();
         return new Object[][]{
                 {
                         BookModelProvider.getValidBookModel(count++)
@@ -73,8 +75,7 @@ public class BookDataProvider {
 
     @DataProvider(name = "putBookModel")
     public static Object[][] getUpdateBookProvider() {
-        var bookModels = new BookClient().getBooksAsModels();
-        BookModel bookModel = RandomUtil.getRandomElement(Arrays.asList(bookModels));
+        BookModel bookModel = RandomUtil.getRandomElement(client.get());
         return new Object[][]{
                 {
                         bookModel.getId(),
@@ -85,8 +86,7 @@ public class BookDataProvider {
 
     @DataProvider(name = "negativePutBookModel")
     public static Object[][] getUpdateBookInvalidDataProvider() {
-        var bookModels = new BookClient().getBooksAsModels();
-        BookModel bookModel = RandomUtil.getRandomElement(Arrays.asList(bookModels));
+        BookModel bookModel = RandomUtil.getRandomElement(client.get());
         return new Object[][]{
                 {
                         bookModel.getId(),
