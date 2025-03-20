@@ -69,7 +69,7 @@ public class BookTest extends BaseApiTest {
         Assertions.assertThat(deletedBook.getBody().asString().isEmpty()).isTrue();
     }
 
-    @Test(dataProvider = "negativeBookIdProvider", dataProviderClass = BookDataProvider.class)
+    @Test(dataProvider = "negativeGetBookProvider", dataProviderClass = BookDataProvider.class)
     public void verifyGetBookByIdEndpointNegative(Integer id) {
         var bookResponse = client.getResponse(id);
 

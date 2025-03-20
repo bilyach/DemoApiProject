@@ -1,6 +1,8 @@
 package models.book;
 
 
+import static java.time.ZonedDateTime.now;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static util.RandomUtil.getRandomNumber;
 import static util.RandomUtil.getRandomString;
 
@@ -13,7 +15,7 @@ public class BookModelProvider {
                 .excerpt(getRandomString())
                 .description(getRandomString())
                 .pageCount(getRandomNumber())
-                .publishDate(getRandomString())
+                .publishDate(now().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")))
                 .build();
     }
 
